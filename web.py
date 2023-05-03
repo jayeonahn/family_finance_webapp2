@@ -26,45 +26,46 @@ def add_item():
     #st.session_state["amount"] = ""
     #del st.session_state["amount"]
 
-item_date = st.date_input(label="**:calendar: :blue[Enter date: ]**",
-                          value=datetime.datetime.now(),
-                          key="form_date")
-st.session_state["date"] = item_date.strftime('%m/%d/%Y')
+with st.form(key='item_form', clear_on_submit=True):
 
-#categories_list = cl.get_main_categories()
-main_categories = ["thing one", "thing two", "thing three"]
-category_selected = st.selectbox(label="**:white_check_mark: Select a category:**",
-                                 options=main_categories, key="main_category")
+    item_date = st.date_input(label="**:calendar: :blue[Enter date: ]**",
+                              value=datetime.datetime.now(),
+                              key="form_date")
+    st.session_state["date"] = item_date.strftime('%m/%d/%Y')
 
-#subcategories = cl.look_up_subcategory(category_selected)
-subcategories = ["sub1", "sub3", "sub3"]
-st.selectbox(label="**:calendar: Select a sub-category:**",
-             options=subcategories, key="category")
+    #categories_list = cl.get_main_categories()
+    main_categories = ["thing one", "thing two", "thing three"]
+    category_selected = st.selectbox(label="**:white_check_mark: Select a category:**",
+                                     options=main_categories, key="main_category")
 
-#categories_list = cl.get_subcategories()
-#category_selected = st.selectbox(label=":white_check_mark: Select a category:",
-#                           options=categories_list, key="category")
+    #subcategories = cl.look_up_subcategory(category_selected)
+    subcategories = ["sub1", "sub3", "sub3"]
+    st.selectbox(label="**:calendar: Select a sub-category:**",
+                 options=subcategories, key="category")
 
-st.text_input(label="**:page_facing_up: Enter Description:**",
-              placeholder="what, where, why...",
-              key="description")
+    #categories_list = cl.get_subcategories()
+    #category_selected = st.selectbox(label=":white_check_mark: Select a category:",
+    #                                 options=categories_list, key="category")
 
-st.number_input(label="**:heavy_dollar_sign: Enter Amount:**",
-                value = 0, key="amount")
+    st.text_input(label="**:page_facing_up: Enter Description:**",
+                  placeholder="what, where, why...",
+                  key="description")
 
-#payment_methods = cl.get_payment_methods()
-payment_methods = ["AmEx", "CapitalOne", "Cash"]
-st.radio(label="**:credit_card: Select payment method:**",
-         index=0, options = payment_methods, key="payment_method")
+    st.number_input(label="**:heavy_dollar_sign: Enter Amount:**",
+                    value = 0, key="amount")
 
-st.write("**:spider_web: Online payment?**")
-st.checkbox(label="yes", value=False, key="online")
+    #payment_methods = cl.get_payment_methods()
+    payment_methods = ["AmEx", "CapitalOne", "Cash"]
+    st.radio(label="**:credit_card: Select payment method:**",
+             index=0, options = payment_methods, key="payment_method")
 
-submit_button = st.button(label="-SUBMIT-")  # --need this? on_click=add_item
+    st.write("**:spider_web: Online payment?**")
+    st.checkbox(label="yes", value=False, key="online")
 
-if submit_button:
-    add_item()
-    st.experimental_rerun()
+    submit_button = st.form_submit_button(label="-SUBMIT-")  # --need this? on_click=add_item
+    if submit_button:
+        add_item()
+        #st.experimental_rerun()
 
 st.write(submit_button)
 
