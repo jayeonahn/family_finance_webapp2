@@ -5,33 +5,37 @@ import pandas
 import excel_write as ew
 #import category_lookup
 
+
 st.title("Family Expenses")
 st.write("Keeping a record of expenses is <b>good</b> practice.",
          unsafe_allow_html=True)  #HTML enabled only for write function
 
+dt = datetime.datetime.now()
+
 def add_item():
     item_dict = {}
-    dt = datetime.datetime.now()
+
     time_stamp = dt.strftime("%m-%d-%Y %I:%M%p")
     item_dict["Timestamp"] = time_stamp
+
     item_dict["description"] = st.session_state["description"]
     item_dict["date"] = st.session_state["date"]
     item_dict["amount"] = st.session_state["amount"]
     item_dict["payment_method"] = st.session_state["payment_method"]
     item_dict["online"] = st.session_state["online"]
     item_dict["main_category"] = st.session_state["main_category"]
-    item_dict["category"] = st.session_state["sub_category"]
+    item_dict["sub_category"] = st.session_state["sub_category"]
 
     # cw.add_item_row(dict_row)
     ew.add_item_to_excel(item_dict)
-    st.write("**:tada: :blue[You have successfully submitted an item. Type in a new item]**")
     st.write(item_dict)
     #st.session_state["form_date"] = st.session_state["form_date"].today()
     #st.session_state["amount"] = ""
     #del st.session_state["amount"]
 
+# *********************WIDGETS ************************
 item_date = st.date_input(label="**:calendar: :blue[Date: ]**",
-                          value=datetime.datetime.now(),
+                          value=dt,
                           key="form_date")
 st.session_state["date"] = item_date.strftime('%m/%d/%Y')
 
@@ -73,7 +77,7 @@ if submit_button:
         st.write(":broken_heart: :red[You must enter an amount.]")
     else:
         add_item()
-        st.experimental_rerun()
+        st.write("**:tada: :blue[You have successfully submitted an item. Type in a new item]**")
 
 
 
