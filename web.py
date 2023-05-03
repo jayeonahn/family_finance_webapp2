@@ -30,7 +30,7 @@ def add_item():
     #st.session_state["amount"] = ""
     #del st.session_state["amount"]
 
-item_date = st.date_input(label="**:calendar: :blue[Enter date: ]**",
+item_date = st.date_input(label="**:calendar: :blue[Date: ]**",
                           value=datetime.datetime.now(),
                           key="form_date")
 st.session_state["date"] = item_date.strftime('%m/%d/%Y')
@@ -38,13 +38,13 @@ st.session_state["date"] = item_date.strftime('%m/%d/%Y')
 main_categories = ew.get_main_categories()
 Category_selected = "Select a category"
 main_categories.insert(0, "Select a category")
-category_selected = st.selectbox(label="**:lower_left_ballpoint_pen: Select a category:**",
+category_selected = st.selectbox(label="**:lower_left_ballpoint_pen: Category:**",
                                  options=main_categories, key="main_category")
 #options (Sequence, numpy.ndarray, pandas.Series, pandas.DataFrame, or pandas.Index)
 
 if (category_selected != "Select a category"):
     sub_categories = ew.get_sub_categories(category_selected)
-    sub_categories.insert(0, "Select a subcategory")
+    sub_categories.insert(0, "Subcategory")
     sub_category_selected = st.selectbox(label="**:lower_left_ballpoint_pen: Select a sub-category:**",
                                          options=sub_categories, key="sub_category")
 
@@ -52,11 +52,11 @@ st.text_input(label="**:page_facing_up: Description:**",
               placeholder="what, where, why...",
               key="description")
 
-amount = st.number_input(label="**:heavy_dollar_sign: Enter Amount:**",
+amount = st.number_input(label="**:heavy_dollar_sign: Amount:**",
                 value = 0, key="amount")
 
 payment_methods = ew.get_payment_methods()
-st.radio(label="**:credit_card: Select payment method:**",
+st.radio(label="**:credit_card: payment method:**",
          index=0, options = payment_methods, key="payment_method")
 
 st.write("**:spider_web: Online payment?**")
