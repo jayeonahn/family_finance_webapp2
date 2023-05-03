@@ -9,7 +9,6 @@ st.title("Family Expenses")
 st.write("Keeping a record of expenses is <b>good</b> practice.",
          unsafe_allow_html=True)  #HTML enabled only for write function
 
-
 def add_item():
     item_dict = {}
     dt = datetime.datetime.now()
@@ -35,8 +34,6 @@ item_date = st.date_input(label="**:calendar: :blue[Enter date: ]**",
                           value=datetime.datetime.now(),
                           key="form_date")
 st.session_state["date"] = item_date.strftime('%m/%d/%Y')
-
-#categories_list = cl.get_main_categories()
 
 main_categories = ew.get_main_categories()
 Category_selected = "Select a category"
@@ -74,8 +71,9 @@ if submit_button:
         st.write(":broken_heart: :red[You must enter a subcategory.]")
     elif st.session_state["amount"] == 0:
         st.write(":broken_heart: :red[You must enter an amount.]")
-    else: add_item()
-    #st.experimental_rerun()
+    else:
+        add_item()
+        st.experimental_rerun()
 
 
 

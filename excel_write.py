@@ -11,7 +11,7 @@ FILEPATH = "family_finance_master.xlsx"
 #main_sheet = work_book['ITEMS']
 ref_cat = read_excel(FILEPATH, index_col=0, sheet_name="Ref_Categories")
 ref_pay = read_excel(FILEPATH, header=0, sheet_name="Payment Methods")
-
+ITEMS = read_excel(FILEPATH, header=0, sheet_name="ITEMS")
 
 def add_item_to_excel(dict_list):
     pass
