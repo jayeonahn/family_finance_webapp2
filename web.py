@@ -1,83 +1,87 @@
 import streamlit as st
-#import category_lookup as cl
 import datetime
-import pandas
 import excel_write as ew
-#import category_lookup
-
-
-st.title("Family Expenses")
-st.write("Keeping a record of expenses is <b>good</b> practice.",
-         unsafe_allow_html=True)  #HTML enabled only for write function
-
-dt = datetime.datetime.now()
-
-def add_item():
-    item_dict = {}
-
-    time_stamp = dt.strftime("%m-%d-%Y %I:%M%p")
-    item_dict["Timestamp"] = time_stamp
-
-    item_dict["description"] = st.session_state["description"]
-    item_dict["date"] = st.session_state["date"]
-    item_dict["amount"] = st.session_state["amount"]
-    item_dict["payment_method"] = st.session_state["payment_method"]
-    item_dict["online"] = st.session_state["online"]
-    item_dict["main_category"] = st.session_state["main_category"]
-    item_dict["sub_category"] = st.session_state["sub_category"]
-
-    # cw.add_item_row(dict_row)
-    ew.add_item_to_excel(item_dict)
-    st.write(item_dict)
-    #st.session_state["form_date"] = st.session_state["form_date"].today()
-    #st.session_state["amount"] = ""
-    #del st.session_state["amount"]
-
-# *********************WIDGETS ************************
-item_date = st.date_input(label="**:calendar: :blue[Date: ]**",
-                          value=dt,
-                          key="form_date")
-st.session_state["date"] = item_date.strftime('%m/%d/%Y')
 
 main_categories = ew.get_main_categories()
-Category_selected = "Select a category"
 main_categories.insert(0, "Select a category")
-category_selected = st.selectbox(label="**:lower_left_ballpoint_pen: Category:**",
-                                 options=main_categories, key="main_category")
-#options (Sequence, numpy.ndarray, pandas.Series, pandas.DataFrame, or pandas.Index)
 
-if (category_selected != "Select a category"):
-    sub_categories = ew.get_sub_categories(category_selected)
-    sub_categories.insert(0, "Subcategory")
-    sub_category_selected = st.selectbox(label="**:lower_left_ballpoint_pen: Select a sub-category:**",
-                                         options=sub_categories, key="sub_category")
+def add_item():
+    dt = datetime.datetime.now()
+    time_stamp = dt.strftime("%m-%d-%Y %I:%M%p")
+    item_dict = {}
 
-st.text_input(label="**:page_facing_up: Description:**",
-              placeholder="what, where, why...",
-              key="description")
+    for key, value in st.session_state.items():
+        item_dict[key] = value
 
-amount = st.number_input(label="**:heavy_dollar_sign: Amount:**",
-                value = 0, key="amount")
+# ------ adding and cleaning up dictionary list ------ #
+    item_dict["Timestamp"] = time_stamp
+    del item_dict["form_date"]
+    del item_dict["submit"]
 
-payment_methods = ew.get_payment_methods()
-st.radio(label="**:credit_card: payment method:**",
-         index=0, options = payment_methods, key="payment_method")
+#------------reset sesstion_state -----------------
+    st.session_state["main_category"] = main_categories[0]
+    st.session_state["amount"] = 0
+    st.session_state["date"] = dt
+    #st.session_state["payment_method"] = ew.get_payment_methods()[0]
+    st.session_state["online"] = False
 
-st.write("**:spider_web: Online payment?**")
-st.checkbox(label="yes", value=False, key="online")
+    ew.add_item_to_excel(item_dict)
+    st.write(item_dict)
 
-submit_button = st.button(label="-SUBMIT-", type="primary", key="submit")  # --need this? on_click=add_item
-
-if submit_button:
-    if category_selected == "Select a category":
+def on_click_function():
+    if st.session_state["main_category"] == main_categories[0]:
         st.write(":broken_heart: :red[You must enter a category.]")
-    elif sub_category_selected == "Select a subcategory":
+    elif st.session_state["sub_category"] == "Select a subcategory":
         st.write(":broken_heart: :red[You must enter a subcategory.]")
     elif st.session_state["amount"] == 0:
         st.write(":broken_heart: :red[You must enter an amount.]")
     else:
         add_item()
-        st.write("**:tada: :blue[You have successfully submitted an item. Type in a new item]**")
+        st.write("**:tada: :blue[You have successfully submitted an item. Enter a new item.]**")
+
+# *********************WIDGETS ************************
+st.title("Family Expenses")
+st.write("Keeping a record of expenses is <b>good</b> practice.",
+         unsafe_allow_html=True)  #HTML enabled only for write function
+
+col, empty_col = st.columns([1,4])
+with col:
+    item_date = st.date_input(label="**:calendar: :blue[Date: ]**", key="form_date")
+    st.session_state["date"] = item_date.strftime('%m/%d/%Y')
+
+st.text_input(label="**:page_facing_up: Description:**",
+              placeholder="what, where, why...",
+              key="description")
+
+col1, col2, empty_col = st.columns([1.5, 1.5, 0.5])
+with col1:
+    category_selected = st.selectbox(label="**:lower_left_ballpoint_pen: Category:**",
+                                     options=main_categories, key="main_category")
+
+with col2:
+    if (category_selected != main_categories[0]):
+        sub_categories = ew.get_sub_categories(category_selected)
+        sub_categories.insert(0, "Select a subcategory")
+        sub_category_selected = st.selectbox(label="**:lower_left_ballpoint_pen: Sub-category:**",
+                                             options=sub_categories, key="sub_category")
+
+col3, col4, col5, empty_col = st.columns([3,3,3,1])
+
+with col3:
+    amount = st.number_input(label="**:heavy_dollar_sign: Amount:**",
+                             key="amount", help="enter income as a negative value")
+with col4:
+    payment_methods = ew.get_payment_methods()
+    st.selectbox(label="**:lower_left_ballpoint_pen: Payment method:**",
+                 options=payment_methods, index=1, key="payment_method")
+
+with col5:
+   st.checkbox(label="Check here if online payment", value=False, key="online")
+
+submit_button = st.button(label="-SUBMIT-", on_click=on_click_function,
+                          type="primary", key="submit")
+
+
 
 
 
