@@ -30,14 +30,14 @@ def add_item():
 
 def on_click_function():
     if st.session_state["main_category"] == main_categories[0]:
-        st.write(":broken_heart: :red[You must enter a category.]")
+        st.info(":broken_heart: :red[You must enter a category.]")
     elif st.session_state["sub_category"] == "Select a subcategory":
-        st.write(":broken_heart: :red[You must enter a subcategory.]")
+        st.info(":broken_heart: :red[You must enter a subcategory.]")
     elif st.session_state["amount"] == 0:
-        st.write(":broken_heart: :red[You must enter an amount.]")
+        st.info(":broken_heart: :red[You must enter an amount.]")
     else:
         add_item()
-        st.write("**:tada: :blue[You have successfully submitted an item. Enter a new item.]**")
+        st.info("**:tada: :blue[You have successfully submitted an item. Enter a new item.]**")
 
 # *********************WIDGETS ************************
 st.title("Family Expenses")
